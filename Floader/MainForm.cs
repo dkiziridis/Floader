@@ -18,13 +18,21 @@ namespace Floader
         public MainForm()
         {
             InitializeComponent();
-            
+
+            listViewLinks.LabelEdit = true;
+            listViewLinks.AllowColumnReorder = false;
+            listViewLinks.CheckBoxes = true;
+            listViewLinks.FullRowSelect = true;
+            listViewLinks.GridLines = true;
+            listViewLinks.Columns.Add("Images");
+            listViewLinks.View = View.Details;
+
+            //Debug.Write("Stared");
         }
         List<string> _downloads = new List<string>();
         List<string> _failedDownloads = new List<string>();
         private List<string> _thumbnails = new List<string>();
-        private ImageList _thumbs;
-        private string _thumbnailSavePath;
+        private ImageList _thumbs = new ImageList();
         private string _savePath;
         private string _secondPattern;
         private string _thumbPattern;
@@ -33,7 +41,7 @@ namespace Floader
         private string _secondSubLink;
         private bool? _secondStage;
         private string _linkInput;
-        private int _imageIndex = 0;
+        //private int _imageIndex = 0;
         private const string UserAgent = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36";
 
         private async void btnDownload_Click(object sender, EventArgs e)
@@ -44,7 +52,13 @@ namespace Floader
             }
             if (_savePath != null)
             {
+                foreach(ListViewItem imgLink in listViewLinks.CheckedItems)
+                {
+                    if(!_downloads.Contains(imgLink.Text))
+                        _downloads.Add(imgLink.Text);
+                }
                 await DownloadPictures(_downloads);
+
                 if (_failedDownloads.Count <= 0) return;
                 var report = _failedDownloads.ToList();
 
@@ -139,33 +153,56 @@ namespace Floader
                     MessageBox.Show(ee.Message);
                 }
                 InfoLbl.Text = @"Working...";
-                var links = LoadLinks(textBoxLink.Text);
-                _thumbnails = links.Item1; //Populating _downloads and thumbnails
-                _downloads = links.Item2;
-                _thumbs = fetchThumbnails(_thumbnails);
 
-                listViewLinks.LargeImageList = _thumbs;
-                listViewLinks.CheckBoxes = true;
+                //save links to tuple
+                var thumbsAndImagesTuple = FetchLinks(textBoxLink.Text);
+                // ----
+                //--imagelist--
 
-                //foreach (var a in _downloads)
-                //{
-                //    _imageIndex++;
+                _thumbs.ImageSize = new Size(120, 100);
+                _thumbs.ColorDepth = ColorDepth.Depth24Bit;
+                listViewLinks.SmallImageList = _thumbs;
+                //Temporary variables
+                using (var webClient = new WebClient())
+                {
+                    foreach (var thumb in thumbsAndImagesTuple.Item1)
+                    {
+                        try
+                        {
+                            webClient.Headers.Add("user-agent", UserAgent);
+                            byte[] data = webClient.DownloadData(thumb);
+                            using (MemoryStream imageData = new MemoryStream(data))
+                            {
+                                Image img = Image.FromStream(imageData);
+                                _thumbs.Images.Add(img);
+                            }
+                            //Debug.Write(thumb+"\n");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                            btnReset_Click(sender, e); //Reset app status in case of failure ie WebException
+                            return;
+                        }
+                    }
+                }
 
-                //    var lvi = new ListViewItem();
-                //    lvi.Text = _imageIndex.ToString();
-                //    lvi.SubItems.Add(a);
-                    
-                //    lvi.SubItems.Add(_imageIndex.ToString());
-                //    listViewLinks.Items.Add(lvi);
-                //    //listViewLinks.Items.Add(a,);
-                //}
+                for (var i = 0; i < _thumbs.Images.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.ImageIndex = i;
+                    lvi.Text = thumbsAndImagesTuple.Item2.ElementAt(i);
+                    listViewLinks.Items.Add(lvi);
+                }
+                listViewLinks.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                //---
                 InfoLbl.Text = "";
             }
             InfoLbl.Text = @"Please select a profile!";
         }
         private void btnReset_Click(object sender, EventArgs e)
         {
-            _imageIndex = 0;
+            _thumbs.Images.Clear();
             _secondPattern = null;
             _firstPattern = null;
             _subLink = null;
@@ -184,7 +221,7 @@ namespace Floader
             {
                 case "www.af.mil":
                     textBoxLink.Text = @"http://www.af.mil/News/Photos.aspx?igcategory=Aircraft";
-                    _thumbPattern = @"https:\/\/media.defense.gov+\/.*.\/.*.\/.*.\/.*.\/213\/.*\/*.JPG"; //TODO
+                    _thumbPattern = @"https:\/\/media.defense.gov+\/.*.\/.*.\/.*.\/.*.\/213\/.*\/*.JPG"; 
                     _subLink = null;
                     _secondSubLink = null;
                     _firstPattern = @"https://media.defense.gov/.*./.*./.*./.*./-1.*/*.JPG";
@@ -211,7 +248,7 @@ namespace Floader
                     break;
             }
         }
-        private Tuple<List<string>,List<string>> LoadLinks(string url)
+        private Tuple<List<string>,List<string>> FetchLinks(string url)
         {
             var thumbnails = new List<string>();
             var images = new List<string>();
@@ -225,10 +262,13 @@ namespace Floader
                     try
                     {
                         var matchThumb = Regex.Match(s, _thumbPattern);
-                        if (!matchThumb.Success) continue;
-                        var thumbName = matchThumb.Value;
-                        if (!_thumbnails.Contains(_subLink + thumbName + _secondSubLink))
-                            _thumbnails.Add(_subLink + thumbName + _secondSubLink);
+                        if (matchThumb.Success)
+                        {
+                            var thumbName = matchThumb.Value;
+                            if (!thumbnails.Contains(_subLink + thumbName + _secondSubLink))
+                                thumbnails.Add(_subLink + thumbName + _secondSubLink);
+                        }
+                       
                     }
                     catch (Exception e)
                     {
@@ -237,18 +277,22 @@ namespace Floader
                     try
                     {
                         var match = Regex.Match(s, _firstPattern);
-                        if (!match.Success) continue;
-                        var name = match.Value;
-                        if (!images.Contains(_subLink + name + _secondSubLink))
-                            images.Add(_subLink + name + _secondSubLink);
+                        if (match.Success)
+                        {
+                            var name = match.Value;
+                            if (!images.Contains(_subLink + name + _secondSubLink))
+                                images.Add(_subLink + name + _secondSubLink);
+                        }
+                        
                     }
                     catch(Exception e)
                     {
                         MessageBox.Show(e.Message);
                     }
                 }
-                return tuple;
+                //returns links to thumbnails and full size images
             }
+            return tuple;
             //{
             //    // MessageBox.Show("Entered into secondStage = true"); //debug code
             //    var urlList = new List<string>();
@@ -274,15 +318,13 @@ namespace Floader
             //    }
             //    return tuple;
             //}
-            return tuple;
+            //return tuple;
         }
         private static IEnumerable<string> GetHtml(string urlAddress)
         {
             var data = new List<string>();
             try
             {
-
-
                 var request = (HttpWebRequest)WebRequest.Create(urlAddress);
                 request.UserAgent = UserAgent;
                 var response = (HttpWebResponse)request.GetResponse();
@@ -312,62 +354,28 @@ namespace Floader
             return data;   
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            listViewLinks.LabelEdit = true;
-
-            listViewLinks.AllowColumnReorder = true;
-
-            listViewLinks.CheckBoxes = true;
-
-            listViewLinks.FullRowSelect = true;
-
-            listViewLinks.GridLines = true;
-            listViewLinks.Columns.Add("#");
-            listViewLinks.Columns.Add("Name");
-
-            ImageList il = new ImageList();
-            il.Images.Add("test1", Image.FromFile(@"C:\Users\Crow\Desktop\test\1.jpg"));
-            il.Images.Add("test2", Image.FromFile(@"C:\Users\Crow\Desktop\test\2.jpg"));
-
-            listViewLinks.View = View.LargeIcon;
-
-            il.ImageSize = new Size(120,120);
-            listViewLinks.LargeImageList = il;
-            listViewLinks.Items.Add("test");
-
-            //for (var i = 0; i < il.Images.Count; i++)
-            //{
-            //    ListViewItem lvi = new ListViewItem();
-            //    lvi.ImageIndex = i;
-            //    lvi.Text = i.ToString();
-            //    listViewLinks.Items.Add(lvi);
-            //}
-        }
-
-        private static ImageList fetchThumbnails(List<string> thumbUrlList)
-        {
-            ImageList thumbList = new ImageList();
-            using (var webClient = new WebClient())
+            foreach (ListViewItem cn in listViewLinks.Items)
             {
-                foreach (var thumb in thumbUrlList)
+                if (!cn.Checked)
                 {
-                    var bitmapData = webClient.DownloadData(thumb);
-
-                    // Bitmap data => bitmap => resized bitmap.            
-                    using (MemoryStream memoryStream = new MemoryStream(bitmapData))
-                    using (Bitmap bitmap = new Bitmap(memoryStream))
-                    using (Bitmap resizedBitmap = new Bitmap(bitmap, 50, 50))
-                    {
-                        // NOTE:
-                        // Resized bitmap must be disposed because the imageList.Images.Add() method
-                        // makes a copy (!) of the source bitmap!
-                        // For details, see https://stackoverflow.com/questions/9515759/                
-                        thumbList.Images.Add(thumb.Substring(thumb.LastIndexOf('/')),resizedBitmap);
-                    }
+                    cn.Checked = true;
                 }
             }
-            return thumbList;
+            listViewLinks.Refresh();
+        }
+
+        private void btnSelectNone_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem cn in listViewLinks.Items)
+            {
+                if (cn.Checked)
+                {
+                    cn.Checked = false;
+                }
+            }
+            listViewLinks.Refresh();
         }
     }
 }

@@ -30,7 +30,6 @@ namespace Floader
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -51,7 +50,8 @@ namespace Floader
             this.btnReset = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.listViewLinks = new System.Windows.Forms.ListView();
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
+            this.btnSelectAll = new System.Windows.Forms.Button();
+            this.btnSelectNone = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -77,7 +77,7 @@ namespace Floader
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(761, 441);
@@ -189,25 +189,28 @@ namespace Floader
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Controls.Add(this.InfoLbl, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.InfoLbl, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.btnSelectAll, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.btnSelectNone, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(194, 33);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(564, 17);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(564, 28);
             this.tableLayoutPanel4.TabIndex = 3;
             // 
             // InfoLbl
             // 
             this.InfoLbl.AutoSize = true;
             this.InfoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.InfoLbl.Location = new System.Drawing.Point(3, 0);
+            this.InfoLbl.Location = new System.Drawing.Point(123, 0);
             this.InfoLbl.Name = "InfoLbl";
-            this.InfoLbl.Size = new System.Drawing.Size(558, 17);
+            this.InfoLbl.Size = new System.Drawing.Size(438, 28);
             this.InfoLbl.TabIndex = 0;
             this.InfoLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -220,7 +223,7 @@ namespace Floader
             this.tableLayoutPanel5.Controls.Add(this.btnReset, 0, 3);
             this.tableLayoutPanel5.Controls.Add(this.button1, 0, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 56);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 67);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 5;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.67669F));
@@ -228,13 +231,13 @@ namespace Floader
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(185, 352);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(185, 341);
             this.tableLayoutPanel5.TabIndex = 5;
             // 
             // btnSaveTo
             // 
             this.btnSaveTo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSaveTo.Location = new System.Drawing.Point(3, 321);
+            this.btnSaveTo.Location = new System.Drawing.Point(3, 310);
             this.btnSaveTo.Name = "btnSaveTo";
             this.btnSaveTo.Size = new System.Drawing.Size(179, 28);
             this.btnSaveTo.TabIndex = 7;
@@ -246,7 +249,7 @@ namespace Floader
             // 
             this.labelSaveTo.AutoSize = true;
             this.labelSaveTo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelSaveTo.Location = new System.Drawing.Point(3, 243);
+            this.labelSaveTo.Location = new System.Drawing.Point(3, 232);
             this.labelSaveTo.Name = "labelSaveTo";
             this.labelSaveTo.Size = new System.Drawing.Size(179, 40);
             this.labelSaveTo.TabIndex = 11;
@@ -254,7 +257,7 @@ namespace Floader
             // btnReset
             // 
             this.btnReset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnReset.Location = new System.Drawing.Point(3, 286);
+            this.btnReset.Location = new System.Drawing.Point(3, 275);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(179, 29);
             this.btnReset.TabIndex = 9;
@@ -265,28 +268,43 @@ namespace Floader
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.Location = new System.Drawing.Point(3, 53);
+            this.button1.Location = new System.Drawing.Point(3, 51);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(179, 30);
             this.button1.TabIndex = 12;
             this.button1.Text = "Test";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // listViewLinks
             // 
             this.listViewLinks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewLinks.Location = new System.Drawing.Point(194, 56);
+            this.listViewLinks.Location = new System.Drawing.Point(194, 67);
             this.listViewLinks.Name = "listViewLinks";
-            this.listViewLinks.Size = new System.Drawing.Size(564, 352);
+            this.listViewLinks.Size = new System.Drawing.Size(564, 341);
             this.listViewLinks.TabIndex = 7;
             this.listViewLinks.UseCompatibleStateImageBehavior = false;
             // 
-            // imageList
+            // btnSelectAll
             // 
-            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.btnSelectAll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSelectAll.Location = new System.Drawing.Point(3, 3);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(54, 22);
+            this.btnSelectAll.TabIndex = 1;
+            this.btnSelectAll.Text = "All";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
+            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
+            // 
+            // btnSelectNone
+            // 
+            this.btnSelectNone.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSelectNone.Location = new System.Drawing.Point(63, 3);
+            this.btnSelectNone.Name = "btnSelectNone";
+            this.btnSelectNone.Size = new System.Drawing.Size(54, 22);
+            this.btnSelectNone.TabIndex = 2;
+            this.btnSelectNone.Text = "None";
+            this.btnSelectNone.UseVisualStyleBackColor = true;
+            this.btnSelectNone.Click += new System.EventHandler(this.btnSelectNone_Click);
             // 
             // MainForm
             // 
@@ -332,7 +350,8 @@ namespace Floader
         private System.Windows.Forms.TextBox textBoxLink;
         private System.Windows.Forms.ListView listViewLinks;
         private Button button1;
-        private ImageList imageList;
+        private Button btnSelectAll;
+        private Button btnSelectNone;
     }
 }
 
