@@ -44,14 +44,13 @@ namespace Floader
             this.btnDownload = new System.Windows.Forms.Button();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.InfoLbl = new System.Windows.Forms.Label();
+            this.btnSelectAll = new System.Windows.Forms.Button();
+            this.btnSelectNone = new System.Windows.Forms.Button();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.btnSaveTo = new System.Windows.Forms.Button();
             this.labelSaveTo = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.listViewLinks = new System.Windows.Forms.ListView();
-            this.btnSelectAll = new System.Windows.Forms.Button();
-            this.btnSelectNone = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -214,6 +213,28 @@ namespace Floader
             this.InfoLbl.TabIndex = 0;
             this.InfoLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnSelectAll
+            // 
+            this.btnSelectAll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSelectAll.Location = new System.Drawing.Point(3, 3);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(54, 22);
+            this.btnSelectAll.TabIndex = 1;
+            this.btnSelectAll.Text = "All";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
+            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
+            // 
+            // btnSelectNone
+            // 
+            this.btnSelectNone.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSelectNone.Location = new System.Drawing.Point(63, 3);
+            this.btnSelectNone.Name = "btnSelectNone";
+            this.btnSelectNone.Size = new System.Drawing.Size(54, 22);
+            this.btnSelectNone.TabIndex = 2;
+            this.btnSelectNone.Text = "None";
+            this.btnSelectNone.UseVisualStyleBackColor = true;
+            this.btnSelectNone.Click += new System.EventHandler(this.btnSelectNone_Click);
+            // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 1;
@@ -221,7 +242,6 @@ namespace Floader
             this.tableLayoutPanel5.Controls.Add(this.btnSaveTo, 0, 4);
             this.tableLayoutPanel5.Controls.Add(this.labelSaveTo, 0, 2);
             this.tableLayoutPanel5.Controls.Add(this.btnReset, 0, 3);
-            this.tableLayoutPanel5.Controls.Add(this.button1, 0, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 67);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -256,24 +276,15 @@ namespace Floader
             // 
             // btnReset
             // 
+            this.btnReset.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.btnReset.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnReset.Location = new System.Drawing.Point(3, 275);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(179, 29);
             this.btnReset.TabIndex = 9;
             this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.Location = new System.Drawing.Point(3, 51);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(179, 30);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Test";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // listViewLinks
             // 
@@ -284,32 +295,11 @@ namespace Floader
             this.listViewLinks.TabIndex = 7;
             this.listViewLinks.UseCompatibleStateImageBehavior = false;
             // 
-            // btnSelectAll
-            // 
-            this.btnSelectAll.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSelectAll.Location = new System.Drawing.Point(3, 3);
-            this.btnSelectAll.Name = "btnSelectAll";
-            this.btnSelectAll.Size = new System.Drawing.Size(54, 22);
-            this.btnSelectAll.TabIndex = 1;
-            this.btnSelectAll.Text = "All";
-            this.btnSelectAll.UseVisualStyleBackColor = true;
-            this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
-            // 
-            // btnSelectNone
-            // 
-            this.btnSelectNone.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSelectNone.Location = new System.Drawing.Point(63, 3);
-            this.btnSelectNone.Name = "btnSelectNone";
-            this.btnSelectNone.Size = new System.Drawing.Size(54, 22);
-            this.btnSelectNone.TabIndex = 2;
-            this.btnSelectNone.Text = "None";
-            this.btnSelectNone.UseVisualStyleBackColor = true;
-            this.btnSelectNone.Click += new System.EventHandler(this.btnSelectNone_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Menu;
             this.ClientSize = new System.Drawing.Size(761, 441);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -349,7 +339,6 @@ namespace Floader
         private System.Windows.Forms.Label labelSaveTo;
         private System.Windows.Forms.TextBox textBoxLink;
         private System.Windows.Forms.ListView listViewLinks;
-        private Button button1;
         private Button btnSelectAll;
         private Button btnSelectNone;
     }
